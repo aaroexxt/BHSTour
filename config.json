@@ -1,5 +1,6 @@
 {
 	"serverPort": 80,
+	"frontendFile": "main.html",
 	"panos": [
 		{"name": "Front Entrance", "link": "1.jpg"}
 	]

@@ -29,8 +29,18 @@ try {
 }
 console.log("3/3: Initializing routes and express");
 const app = express();
-console.log("routes init")
-app.get('/', (req, res) => res.send('Hello World!'))
+console.log("routes init");
+
+app.get('/', (req, res) => {
+	console.log("cli request");
+	fs.readFile(configData.frontendFile, (error, buffer) => {
+		if (error) {
+			res.send("Couldn't find file: "+configData.frontendFile);
+		} else {
+			res.send(buffer);
+		}
+	})
+});
 
 console.log("server init");
 if (typeof configData.serverPort == "undefined") {
