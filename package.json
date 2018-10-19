@@ -1,0 +1,17 @@
+{
+  "name": "20timetour",
+  "version": "1.0.0",
+  "description": "Virtually tour BHS",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "keywords": [
+    "virtual-tour"
+  ],
+  "author": "Aaron Becker",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
