@@ -13,6 +13,25 @@
 			.center {
 				text-align: center;
 			}
+			.centerVH {
+				margin: 0;
+			    position: absolute;
+			    top: 50%;
+			    left: 50%;
+			    transform: translate(-50%, -50%);
+				display: block;
+			    margin-left: auto;
+			    margin-right: auto;
+			    width: 40%;
+			}
+			.footer {
+			    position: fixed;
+			    left: 0;
+			    bottom: 0;
+			    width: 100%;
+			    font-weight: 10;
+			    text-align: center;
+			}
 			h1 {
 				font-weight: 200;
 			}
@@ -74,7 +93,7 @@
 			a.button {
 				position: relative;
 				display: inline-block;
-				width: 25.6em;
+				width: 16em;
 				height: 6.3em;
 				overflow: hidden;
 				vertical-align: middle;
@@ -129,12 +148,33 @@
 
 		</style>
 		<div class="center">
-			<h1>Tour BHS Virtually</h1>
-			<h3>by Aaron Becker, Architecture Period 5</h3>
-			<br>
-			<div class="arrow right"></div>
-			<br>
-			<div class="arrow left"></div>
+			
+
+			<div style="display: block" class="centerVH">
+				<a class="button">
+					<svg>
+						<g>
+							<line x2="227.62" y1="31.28" y2="31.28"></line>
+							<polyline points="222.62 25.78 228.12 31.28 222.62 36.78"></polyline>
+							<circle cx="224.67" cy="30.94" r="30.5" transform="rotate(180 224.67 30.94) scale(1, -1) translate(0, -61)"></circle>
+						</g>
+					</svg>
+					<font>Begin Tour</font>
+				</a>
+			</div>
+
+			<div style="display: none;">
+				<h1>Tour BHS Virtually</h1>
+			</div>
+			<div class="footer center">
+				<h3>By Aaron Becker</h3>
+			</div>
+
+			<div style="display: none">
+				<div class="arrow right"></div>
+				<br>
+				<div class="arrow left"></div>
+			</div>
 		</div>
 	</body>
 </html>
