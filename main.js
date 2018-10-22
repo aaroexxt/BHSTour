@@ -10,6 +10,7 @@ WIN COMMANDS:
 
 net use X: \\bhs-nad\home\students\21BeckerA00
 cd X:\BHSTour\
+node main.js
 */
 
 
@@ -29,17 +30,18 @@ try {
 }
 console.log("3/3: Initializing routes and express");
 const app = express();
+app.use(express.static(configData.assetsDirectory)); //config static
 console.log("routes init");
 
 app.get('/', (req, res) => {
 	console.log("cli request");
 	fs.readFile(configData.frontendFile, (error, buffer) => {
 		if (error) {
-			res.send("Couldn't find file: "+configData.frontendFile);
+			res.end("Couldn't find file: "+configData.frontendFile);
 		} else {
-			res.send(buffer);
+			res.end(buffer);
 		}
-	})
+	});
 });
 
 console.log("server init");

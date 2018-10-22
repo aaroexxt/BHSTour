@@ -1,8 +1,140 @@
 <!DOCTYPE html>
 	<head>
 		<title>BHS Virtual Tour</title>
+		<link href='https://fonts.googleapis.com/css?family=SF Pro Display' rel='stylesheet'>
 	</head>
 	<body>
-		hi
+		<style type="text/css">
+			body {
+				font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+				background-color: #282828;
+				color: #fff;
+			}
+			.center {
+				text-align: center;
+			}
+			h1 {
+				font-weight: 200;
+			}
+			h3 {
+				font-weight: 10;
+			}
+
+			div.arrow {
+				width: 6vmin;
+				height: 6vmin;
+				box-sizing: border-box;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				color: #fff !important;
+			}
+			div.arrow::before {
+				content: '';
+				width: 100%;
+				height: 100%;
+				border-width: 0.8vmin 0.8vmin 0 0;
+				border-style: solid;
+				border-color: #fafafa;
+				transition: 0.2s ease;
+				display: block;
+				transform-origin: 100% 0;
+			}
+			div.arrow:after {
+				content: '';
+				float: left;
+				position: relative;
+				top: -100%;
+				width: 100%;
+				height: 100%;
+				border-width: 0 0.8vmin 0 0;
+				border-style: solid;
+				border-color: #fafafa;
+				transform-origin: 100% 0;
+				transition: 0.2s ease;
+			}
+			div.arrow:hover::after {
+				transform: rotate(45deg);
+				border-color: orange;
+				height: 120%;
+			}
+			div.arrow:hover::before {
+				border-color: orange;
+				transform: scale(0.8);
+			}
+
+
+			div.arrow.right {
+				transform: rotate(45deg);
+			}
+			div.arrow.left {
+				transform: rotate(225deg);
+			}
+
+			a.button {
+				position: relative;
+				display: inline-block;
+				width: 25.6em;
+				height: 6.3em;
+				overflow: hidden;
+				vertical-align: middle;
+				text-align: left;
+				text-decoration: none;
+				line-height: 3em;
+				font-size: 1rem;
+				color: #fff;
+				cursor: pointer;
+				transform: translateZ(0);
+				transition: transform 0.5s;
+			}
+			a.button svg {
+				z-index: 1;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			a.button svg g line,
+			a.button svg g polyline,
+			a.button svg g circle {
+				fill: none;
+				stroke: #fff;
+			}
+			a.button svg g line,
+			a.button svg g polyline {
+				stroke-miterlimit: 10;
+			}
+			a.button svg g circle {
+				display: block;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+				stroke-width: 0.066em;
+				stroke-dasharray: 200;
+				stroke-dashoffset: 0;
+				transition: stroke-dashoffset ease-out 0.5s;
+			}
+			a.button font {
+				z-index: 2;
+				position: relative;
+				display: inline-block;
+				text-transform: uppercase;
+				font-family: "Roboto", Helvetica, Arial, sans-serif;
+				font-size: 1.5em;
+			}
+			a.button:hover {
+				transform: translateZ(0) translateX(0.5em);
+			}
+			a.button:hover svg g circle {
+				stroke-dashoffset: 200;
+			}
+
+		</style>
+		<div class="center">
+			<h1>Tour BHS Virtually</h1>
+			<h3>by Aaron Becker, Architecture Period 5</h3>
+			<br>
+			<div class="arrow right"></div>
+			<br>
+			<div class="arrow left"></div>
+		</div>
 	</body>
 </html>
