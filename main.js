@@ -9,7 +9,7 @@ Copyright Aaron Becker
 WIN COMMANDS:
 
 net use X: \\bhs-nad\home\students\21BeckerA00
-cd X:\BHSTour\
+cd H:\BHSTour\
 node main.js
 */
 
