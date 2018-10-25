@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 	<head>
 		<title>BHS Virtual Tour</title>
+		<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<title>A simple example</title>
 		<link href='https://fonts.googleapis.com/css?family=SF Pro Display' rel='stylesheet'>
+		<link rel="stylesheet" href="https://cdn.pannellum.org/2.4/pannellum.css"/>
+	    <script type="text/javascript" src="https://cdn.pannellum.org/2.4/pannellum.js"></script>
+	    <style>
+	    #panorama {
+	        width: 600px;
+	        height: 400px;
+	    }
+    </style>
 	</head>
 	<body>
 		<style type="text/css">
@@ -9,6 +20,14 @@
 				font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 				background-color: #282828;
 				color: #fff;
+			}
+			html {
+			    overflow: scroll;
+			    overflow-x: hidden;
+			}
+			::-webkit-scrollbar {
+			    width: 0px;  /* remove scrollbar space */
+			    background: transparent;  /* optional: just make scrollbar invisible */
 			}
 			.center {
 				text-align: center;
@@ -44,7 +63,6 @@
 				height: 6vmin;
 				box-sizing: border-box;
 				position: absolute;
-				left: 50%;
 				top: 50%;
 				color: #fff !important;
 			}
@@ -85,9 +103,11 @@
 
 			div.arrow.right {
 				transform: rotate(45deg);
+				right: 2% !important;
 			}
 			div.arrow.left {
 				transform: rotate(225deg);
+				left: 2% !important;
 			}
 
 			a.button {
@@ -214,7 +234,40 @@
 					const tm = document.getElementById("tour-markers");
 					tm.style.display = "block";
 					tm.className = "fade-in";
-				}
+
+					fetch("localhost/panoramaData")
+
+					workshop360 = pannellum.viewer('workshop360', ﻿{
+	                    "panorama": "https://www.aaronbecker.tech/projects/projects/360/pano6.jpg", //"panorama": "https://i.imgur.com/zMXUAqA.jp",
+	                    "autoLoad": true,
+	                    "showControls": false,
+	                    //"pitch": -24.8,
+	                    //"yaw": -160.5,
+	                    //"hfov": 102
+	                });
+	                document.getElementById('pan-up').addEventListener('click', function(e) {
+	                    workshop360.setPitch(workshop360.getPitch() + 10);
+	                });
+	                document.getElementById('pan-down').addEventListener('click', function(e) {
+	                    workshop360.setPitch(workshop360.getPitch() - 10);
+	                });
+	                document.getElementById('pan-left').addEventListener('click', function(e) {
+	                    workshop360.setYaw(workshop360.getYaw() - 10);
+	                });
+	                document.getElementById('pan-right').addEventListener('click', function(e) {
+	                    workshop360.setYaw(workshop360.getYaw() + 10);
+	                });
+	                document.getElementById('zoom-in').addEventListener('click', function(e) {
+	                    workshop360.setHfov(workshop360.getHfov() - 10);
+	                });
+	                document.getElementById('zoom-out').addEventListener('click', function(e) {
+	                    workshop360.setHfov(workshop360.getHfov() + 10);
+	                });
+	                document.getElementById('fullscreen').addEventListener('click', function(e) {
+	                    workshop360.toggleFullscreen();
+	                });
+	                workshop360.loadScene();
+				},
 			}
 		</script>
 		<div class="center">

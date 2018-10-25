@@ -43,6 +43,11 @@ app.get('/', (req, res) => {
 		}
 	});
 });
+app.get('/panoramaData', (req, res) => {
+	console.log("cli request: pano");
+	res.end(JSON.stringify(configData.panos));
+});
+
 
 console.log("server init");
 if (typeof configData.serverPort == "undefined") {
