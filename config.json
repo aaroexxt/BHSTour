@@ -3,6 +3,7 @@
 	"frontendFile": "main.html",
 	"assetsDirectory": "assets",
 	"panos": [
-		{"name": "Front Entrance", "link": "1.jpg"}
+		{"name": "Front Entrance", "link": "1.jpg"},
+		
 	]
 }
