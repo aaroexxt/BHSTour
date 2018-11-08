@@ -3,6 +3,7 @@
 	"frontendFile": "main.html",
 	"assetsDirectory": "assets",
 	"panoDirectory": "assets/panos",
+	"panoMetadataDirectory": "metadata.json",
 	"panos": [
 		{"name": ""}
 	]
