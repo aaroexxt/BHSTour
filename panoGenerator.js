@@ -149,18 +149,18 @@ try {
 								}
 								currentProgress.update(0.19);
 								if (typeof JSONdata.PanoMetas == "undefined") {
-									console.log("PanoTitles Undefined");
+									console.log("PanoMetas Undefined");
 									metadataState.metasPresent = false;
 								} else {
-									console.log("PanoTitles OK");
+									console.log("PanoMetas OK");
 									metadataState.metasPresent = true;
 								}
 								currentProgress.update(0.2);
 								if (typeof JSONdata.PanoObjects == "undefined") {
-									console.log("PanoTitles Undefined");
+									console.log("PanoObjects Undefined");
 									metadataState.objectsPresent = false;
 								} else {
-									console.log("PanoTitles OK");
+									console.log("PanoObjects OK");
 									metadataState.objectsPresent = true;
 								}
 							}
@@ -172,7 +172,27 @@ try {
 					if (err) {
 						throw err;
 					} else {
-						console.log(files);
+						console.log("Compiling metadata...");
+						var currentPercent = 0.2;
+						var percentPerFile = (currentPercent+0.6)/files.length;
+						
+						new Promise( (resolve, reject) => {
+							console.log("Inside promise");
+							function fileParsedHandler(index) {
+								console.log("proc file "+index+"fname "+files[index])
+								if (index => files.length) {
+									resolve();
+								} else {
+									fileParsedHandler(index+1);
+								}
+							}
+							fileParsedHandler(0); //start handler
+						})
+						.then( () => {
+							console.log("after promise")
+						})
+						
+
 					}
 				})
 			}
