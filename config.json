@@ -2,8 +2,9 @@
 	"serverPort": 80,
 	"frontendFile": "main.html",
 	"assetsDirectory": "assets",
+	"panoDirectory": "assets/panos",
+	"panoMetadataDirectory": "metadata.json",
 	"panos": [
-		{"name": "Front Entrance", "link": "1.jpg"},
-		
+		{"name": ""}
 	]
 }
