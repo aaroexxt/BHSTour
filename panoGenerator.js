@@ -180,7 +180,9 @@ try {
 							console.log("Inside promise");
 							function fileParsedHandler(index) {
 								console.log("proc file "+index+"fname "+files[index])
-								if (index => files.length) {
+								if (metadataState.PanoTitles)
+								PanoTitles.push()
+								if (index >= files.length-1) {
 									resolve();
 								} else {
 									fileParsedHandler(index+1);
