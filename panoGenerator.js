@@ -96,13 +96,9 @@ console.log = function() {
 
 //Pano State Tracking
 
-var PanoTitles = [];
-var PanoMetas = [];
 var PanoObjects = [];
 var metadataPresent = false;
 var metadataState = {
-	titlesPresent: false,
-	metasPresent: false,
 	objectsPresent: false
 };
 
@@ -130,6 +126,7 @@ try {
 					if (err) {
 						console.log("Metadata file doesn't exist");
 						metadataPresent = false;
+						updateMetadata();
 					} else {
 						console.log("Metadata file exists, reading");
 						currentProgress.update(0.17);
@@ -137,66 +134,109 @@ try {
 						fs.readFile(path.join(configData.panoDirectory,configData.panoMetadataDirectory), (err, data) => {
 							if (err) {
 								metadataPresent = false;
+								updateMetadata();
 							} else {
 								currentProgress.update(0.18);
-								let JSONdata = JSON.parse(data);
-								if (typeof JSONdata.PanoTitles == "undefined") {
-									console.log("PanoTitles Undefined");
-									metadataState.titlesPresent = false;
-								} else {
-									console.log("PanoTitles OK");
-									metadataState.titlesPresent = true;
-								}
-								currentProgress.update(0.19);
-								if (typeof JSONdata.PanoMetas == "undefined") {
-									console.log("PanoMetas Undefined");
-									metadataState.metasPresent = false;
-								} else {
-									console.log("PanoMetas OK");
-									metadataState.metasPresent = true;
-								}
-								currentProgress.update(0.2);
-								if (typeof JSONdata.PanoObjects == "undefined") {
-									console.log("PanoObjects Undefined");
+								try {
+									let JSONdata = JSON.parse(data);
+									currentProgress.update(0.2);
+									if (typeof JSONdata.PanoObjects == "undefined") {
+										console.log("PanoObjects Undefined");
+										console.log("Deleting metadata file because it's useless...");
+										fs.unlink(path.join(configData.panoDirectory,configData.panoMetadataDirectory), (err) => {
+											if (err) {
+												throw "Error unlinking invalid metadata file: "+err;
+											}
+										})
+										metadataState.objectsPresent = false;
+										metadataPresent = false;
+									} else {
+										console.log("PanoObjects OK");
+										metadataState.objectsPresent = true;
+									}
+								} catch(e) {
+									console.warn("Error parsing metadata file, it's invalid. Deleting");
+									fs.unlink(path.join(configData.panoDirectory,configData.panoMetadataDirectory), (err) => {
+										if (err) {
+											throw "Error unlinking invalid metadata file: "+err;
+										}
+									})
 									metadataState.objectsPresent = false;
-								} else {
-									console.log("PanoObjects OK");
-									metadataState.objectsPresent = true;
+									metadataPresent = false;
 								}
+								updateMetadata();
 							}
 						})
 					}
 				})
-				currentProgress.update(0.2);
-				fs.readdir(configData.panoDirectory, (err, files) => {
-					if (err) {
-						throw err;
-					} else {
-						console.log("Compiling metadata...");
-						var currentPercent = 0.2;
-						var percentPerFile = (currentPercent+0.6)/files.length;
-						
-						new Promise( (resolve, reject) => {
-							console.log("Inside promise");
-							function fileParsedHandler(index) {
-								console.log("proc file "+index+"fname "+files[index])
-								if (metadataState.PanoTitles)
-								PanoTitles.push()
-								if (index >= files.length-1) {
-									resolve();
-								} else {
-									fileParsedHandler(index+1);
-								}
-							}
-							fileParsedHandler(0); //start handler
-						})
-						.then( () => {
-							console.log("after promise")
-						})
-						
+			}
+		})
+	}
 
+	function updateMetadata() {
+		currentProgress.update(0.2);
+		fs.readdir(configData.panoDirectory, (err, files) => {
+			if (err) {
+				throw err;
+			} else {
+				console.log("Compiling metadata...");
+				var currentPercent = 0.2;
+				var percentPerFile = (currentPercent+0.6)/files.length; //will go to 0.8
+				
+				new Promise( (resolve, reject) => {
+					console.log("Inside promise");
+					function fileParsedHandler(index) {
+						//console.log("proc file "+index+"fname "+files[index])
+						if (metadataState.objectsPresent && metadataPresent) {
+							let metadataPresent = false;
+							for (var i=0; i<PanoObjects.length; i++) {
+								if (PanoObjects[i].path.toLowerCase() == files[index].toLowerCase()) {
+									metadataPresent = true;
+								}
+							}
+							if (!metadataPresent) { //not found in existing data
+								PanoObjects.push({
+									metadata: "",
+									index: index,
+									path: files[index].toLowerCase(),
+									absolutePath: path.join(__dirname,configData.panoDirectory,files[index].toLowerCase())
+								})
+							}
+						} else {
+							PanoObjects.push({
+								metadata: "",
+								index: index,
+								path: files[index].toLowerCase(),
+								absolutePath: path.join(__dirname,configData.panoDirectory,files[index].toLowerCase())
+							})
+						}
+						if (index >= files.length-1) {
+							resolve();
+						} else {
+							currentPercent+=percentPerFile;
+							currentProgress.update(currentPercent);
+							fileParsedHandler(index+1);
+						}
 					}
+					fileParsedHandler(0); //start handler
 				})
+				.then( () => {
+					console.log("Finished compiling metadata, wrapping & writing file...");
+					currentProgress.update(0.9);
+					let stringifiedData = JSON.stringify(PanoObjects); //now updated panoObjects
+					fs.writeFile(path.join(__dirname,configData.panoDirectory,configData.panoMetadataDirectory), stringifiedData, err => {
+						if (err) {
+							console.log("Dumping JSON data...");
+							console.log(stringifiedData);
+							throw "Error writing file: "+err;
+						}
+					})
+					currentProgress.update(1);
+					console.log("Done.");
+				})	
+
+				
+
 			}
 		})
 	}
