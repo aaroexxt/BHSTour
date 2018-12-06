@@ -224,6 +224,8 @@ try {
 					console.log("Finished compiling metadata, wrapping & writing file...");
 					currentProgress.update(0.9);
 					let stringifiedData = JSON.stringify(PanoObjects); //now updated panoObjects
+					//Leave this line uncommented if you want unescaped lines in the absolute path
+					//stringifiedData = stringifiedData.replace(/\\\\/g, "\\");
 					fs.writeFile(path.join(__dirname,configData.panoDirectory,configData.panoMetadataDirectory), stringifiedData, err => {
 						if (err) {
 							console.log("Dumping JSON data...");
@@ -232,6 +234,7 @@ try {
 						}
 					})
 					currentProgress.update(1);
+					console.log("Wrote "+PanoObjects.length+" objects to file");
 					console.log("Done.");
 				})	
 

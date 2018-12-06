@@ -31,6 +31,10 @@ try {
 	var configData = fs.readFileSync("config.json", "utf8");
 	configData = JSON.parse(configData);
 	console.log("configData: "+JSON.stringify(configData));
+	console.log("Reading metadata...");
+	var panoMetadata = fs.readFileSync(path.join(__dirname,configData.panoDirectory,configData.panoMetadataDirectory));
+	panoMetadata = JSON.parse(panoMetadata);
+	console.log("configData: "+JSON.stringify(panoMetadata));
 } catch(e) {
 	throw "Error reading config: "+e;
 }
@@ -51,7 +55,7 @@ app.get('/', (req, res) => {
 });
 app.get('/panoramaData', (req, res) => {
 	console.log("cli request: pano");
-	res.end(JSON.stringify(configData.panos));
+	res.end(JSON.stringify(panoMetadata));
 });
 
 

@@ -3,7 +3,6 @@
 		<title>BHS Virtual Tour</title>
 		<meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	<title>A simple example</title>
 		<link href='https://fonts.googleapis.com/css?family=SF Pro Display' rel='stylesheet'>
 		<link rel="stylesheet" href="static/pannellum.css"/>
 	    <script type="text/javascript" src="static/pannellum.js"></script>
@@ -229,13 +228,12 @@
 		</style>
 		<script>
 			const tourManager = {
+				panoData: [],
 				begin: function() {
 					console.log("TOUR BEGUN");
 					const tm = document.getElementById("tour-markers");
 					tm.style.display = "block";
 					tm.className = "fade-in";
-
-					fetch("localhost/panoramaData")
 
 					workshop360 = pannellum.viewer('workshop360', ﻿{
 	                    "panorama": "https://www.aaronbecker.tech/projects/projects/360/pano6.jpg", //"panorama": "https://i.imgur.com/zMXUAqA.jp",
@@ -268,7 +266,26 @@
 	                });
 	                workshop360.loadScene();
 				},
+				init: function() {
+					fetch("/panoramaData")
+					.then(data => data.json())
+					.then(data => {
+						console.log("Data load OK");
+						tourManager.panoData = data;
+						tourManager.loadPanos(data);
+					})
+					.catch(err => {
+						console.error("Error loading data: "+err);
+						alert("Error loading panoData="+err);
+					})
+				},
+				loadPanos: function(panoData) {
+					for (var i=0; i<panoData.length; i++) {
+						console.log("Loading panoData at index: "+i);
+					}
+				}
 			}
+			tourManager.init();
 		</script>
 		<div class="center">
 			<div style="display: block" class="centerVH fade-in">
