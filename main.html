@@ -284,7 +284,7 @@
 						console.log("Loading panoData at index: "+i);
 						let pano = panoData[i];
 						pano = "http://"+window.location.host+"/static/panos/"+panoData[i].path;
-						console.log(pano)
+						tourManager.panoData.push({url: pano, meta: panoData[i].metadata});
 					}
 				},
 				createPano: function(url) {
