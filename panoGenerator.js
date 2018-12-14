@@ -14,6 +14,14 @@ const singleLineLog = require('single-line-log').stdout; //single line logging f
 const colors = require('colors');
 const windowPlugin = require('window-size');
 
+const originalLog = console.log;
+console.log = function(log) {
+	if (typeof log !== "string") {
+		originalLog("\n"+JSON.stringify(log));
+	} else {
+		originalLog("\n"+log);
+	}
+}
 //ProgressBar code from CarOS
 
 function progressBar(options) {
@@ -138,9 +146,9 @@ try {
 							} else {
 								currentProgress.update(0.18);
 								try {
-									let JSONdata = JSON.parse(data);
+									var JSONdata = JSON.parse(data);
 									currentProgress.update(0.2);
-									if (typeof JSONdata.PanoObjects == "undefined") {
+									if (typeof JSONdata == "undefined") {
 										console.log("PanoObjects Undefined");
 										console.log("Deleting metadata file because it's useless...");
 										fs.unlink(path.join(configData.panoDirectory,configData.panoMetadataDirectory), (err) => {
@@ -153,6 +161,8 @@ try {
 									} else {
 										console.log("PanoObjects OK");
 										metadataState.objectsPresent = true;
+										metadataPresent = true;
+										PanoObjects = JSONdata;
 									}
 								} catch(e) {
 									console.warn("Error parsing metadata file, it's invalid. Deleting");
@@ -187,14 +197,25 @@ try {
 					console.log("Inside promise");
 					function fileParsedHandler(index) {
 						//console.log("proc file "+index+"fname "+files[index])
-						if (metadataState.objectsPresent && metadataPresent) {
-							let metadataPresent = false;
-							for (var i=0; i<PanoObjects.length; i++) {
-								if (PanoObjects[i].path.toLowerCase() == files[index].toLowerCase()) {
-									metadataPresent = true;
+						if (files[index].toLowerCase().indexOf("thumbs.db") < 0) {
+							if (metadataState.objectsPresent && metadataPresent) {
+								let OmetadataPresent = false;
+								for (var i=0; i<PanoObjects.length; i++) {
+									if (PanoObjects[i].path.toLowerCase() == files[index].toLowerCase()) {
+										OmetadataPresent = true;
+										console.log('Found previous metadata in file; leaving it');
+									}
 								}
-							}
-							if (!metadataPresent) { //not found in existing data
+								if (!OmetadataPresent) { //not found in existing data
+									console.log("New metadata found")
+									PanoObjects.push({
+										metadata: "",
+										index: index,
+										path: files[index].toLowerCase(),
+										absolutePath: path.join(__dirname,configData.panoDirectory,files[index].toLowerCase())
+									})
+								}
+							} else {
 								PanoObjects.push({
 									metadata: "",
 									index: index,
@@ -203,13 +224,9 @@ try {
 								})
 							}
 						} else {
-							PanoObjects.push({
-								metadata: "",
-								index: index,
-								path: files[index].toLowerCase(),
-								absolutePath: path.join(__dirname,configData.panoDirectory,files[index].toLowerCase())
-							})
+							console.warn("[WARN] skipping thumbs.db file")
 						}
+
 						if (index >= files.length-1) {
 							resolve();
 						} else {

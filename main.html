@@ -282,7 +282,13 @@
 				loadPanos: function(panoData) {
 					for (var i=0; i<panoData.length; i++) {
 						console.log("Loading panoData at index: "+i);
+						let pano = panoData[i];
+						pano = "http://"+window.location.host+"/static/panos/"+panoData[i].path;
+						console.log(pano)
 					}
+				},
+				createPano: function(url) {
+
 				}
 			}
 			tourManager.init();
