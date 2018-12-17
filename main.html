@@ -57,6 +57,15 @@
 				font-weight: 10;
 			}
 
+			#panoContainer {
+				width: 1000px;
+				height: 1000px;
+			}
+			#panoContainer div {
+				width: 1000px;
+				height: 1000px;
+			}
+
 			div.arrow {
 				width: 6vmin;
 				height: 6vmin;
@@ -227,15 +236,86 @@
 
 		</style>
 		<script>
+			function uuid() { //uuid generation
+				function s4() {
+					return Math.floor((1 + Math.random()) * 0x10000)
+					  .toString(16)
+					  .substring(1);
+				}
+				return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+			}
 			const tourManager = {
 				panoData: [],
+				createdPanoObjects: [],
+				defaultElement: "panoContainer",
+				slideIndex: 0,
 				begin: function() {
 					console.log("TOUR BEGUN");
 					const tm = document.getElementById("tour-markers");
 					tm.style.display = "block";
 					tm.className = "fade-in";
+				},
+				init: function() {
+					fetch("/panoramaData")
+					.then(data => data.json())
+					.then(data => {
+						console.log("Data load OK");
+						//tourManager.panoData = data;
+						tourManager.loadPanos(data);
+					})
+					/*.catch(err => {
+						console.error("Error loading data: "+err);
+						alert("Error loading panoData="+err);
+					})*/
+				},
+				loadPanos: function(panoData) {
+					let length = JSON.parse(JSON.stringify(panoData.length));
+					length = 2;
+					for (var i=0; i<length; i++) {
+						console.log("Loading panoData at index: "+i);
+						let pano = panoData[i];
+						pano = "http://"+window.location.host+"/static/panos/"+panoData[i].path;
+						let panoID = uuid();
+						tourManager.panoData.push({url: pano, meta: panoData[i].metadata, id: panoID});
+						tourManager.createPano(pano, panoData[i].metadata, panoID);
+					}
 
-					workshop360 = pannellum.viewer('workshop360', ﻿{
+					for (var i=0; i<length; i++) {
+						tourManager.panoData[i].panoObject = tourManager.createdPanoObjects[i];
+					}
+				},
+				createPano: function(url, metadata, id) {
+					console.log("createPano called with ",arguments)
+					let documentContainer = document.getElementById(tourManager.defaultElement);
+
+
+					let panoContainerElement = document.createElement("div");
+					panoContainerElement.style.display = "none";
+					panoContainerElement.setAttribute("id",id); //create container
+
+					let panoTextElement = document.createElement("p");
+					panoTextElement.appendChild(document.createTextNode(metadata));
+					panoTextElement.setAttribute("id","META-"+id);
+					panoContainerElement.appendChild(panoTextElement); //append metadata holder
+
+					let realPanoElement = document.createElement("div");
+					realPanoElement.setAttribute("id","PANO-"+id);
+					panoContainerElement.appendChild(realPanoElement); //create actual pano element
+
+					documentContainer.appendChild(panoContainerElement); //add container to doc container lol
+
+					let pano = pannellum.viewer("PANO-"+id, ﻿{ //create panoObject
+	                    //"panorama": url,
+	                    //"autoLoad": true,
+	                    "showControls": false,
+	                });
+	                //pano.loadScene();
+	                tourManager.createdPanoObjects.push(pano);
+
+	                console.log("pano cre8ed")
+				
+
+					/*let pano = pannellum.viewer('workshop360', ﻿{
 	                    "panorama": "https://www.aaronbecker.tech/projects/projects/360/pano6.jpg", //"panorama": "https://i.imgur.com/zMXUAqA.jp",
 	                    "autoLoad": true,
 	                    "showControls": false,
@@ -264,34 +344,37 @@
 	                document.getElementById('fullscreen').addEventListener('click', function(e) {
 	                    workshop360.toggleFullscreen();
 	                });
-	                workshop360.loadScene();
+	                workshop360.loadScene();*/
 				},
-				init: function() {
-					fetch("/panoramaData")
-					.then(data => data.json())
-					.then(data => {
-						console.log("Data load OK");
-						tourManager.panoData = data;
-						tourManager.loadPanos(data);
-					})
-					.catch(err => {
-						console.error("Error loading data: "+err);
-						alert("Error loading panoData="+err);
-					})
-				},
-				loadPanos: function(panoData) {
-					for (var i=0; i<panoData.length; i++) {
-						console.log("Loading panoData at index: "+i);
-						let pano = panoData[i];
-						pano = "http://"+window.location.host+"/static/panos/"+panoData[i].path;
-						tourManager.panoData.push({url: pano, meta: panoData[i].metadata});
+				setIndex: function(index) {
+					tourManager.slideIndex = index;
+
+					let documentContainer = document.getElementById(tourManager.defaultElement);
+					let children = documentContainer.children;
+
+					if (tourManager.slideIndex > children.length) {
+						tourManager.slideIndex = 0;
+					} else if (tourManager.slideIndex < 0) {
+						tourManager.slideIndex = children.length;
+					}
+					for (var i=0; i<children.length; i++) {
+						if (i == index) {
+							children[i].style.display = "block";
+						} else {
+							children[i].style.display = "none";
+						}
 					}
 				},
-				createPano: function(url) {
-
+				clientAction: function(direction) {
+					if (direction.toLowerCase() == "right") {
+						tourManager.setIndex(tourManager.slideIndex+1);
+					} else {
+						tourManager.setIndex(tourManager.slideIndex-1);
+					}
 				}
 			}
 			tourManager.init();
+			tourManager.setIndex(0);
 		</script>
 		<div class="center">
 			<div style="display: block" class="centerVH fade-in">
@@ -316,6 +399,9 @@
 				</div>
 			</div>
 			
+			<div id="panoContainer">
+				TEST
+			</div>
 
 			<div class="footer center fade-in">
 				<p>By Aaron Becker</p>
