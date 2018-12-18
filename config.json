@@ -1,6 +1,7 @@
 {
 	"serverPort": 80,
 	"frontendFile": "main.html",
+	"testFile": "test.html",
 	"assetsDirectory": "assets",
 	"panoDirectory": "assets/panos",
 	"panoMetadataDirectory": "metadata.json",

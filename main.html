@@ -6,14 +6,37 @@
 		<link href='https://fonts.googleapis.com/css?family=SF Pro Display' rel='stylesheet'>
 		<link rel="stylesheet" href="static/pannellum.css"/>
 	    <script type="text/javascript" src="static/pannellum.js"></script>
-	    <style>
-	    #panorama {
-	        width: 600px;
-	        height: 400px;
-	    }
-    </style>
 	</head>
 	<body>
+		<div class="center" id="mainContainer">
+			<div style="display: block" class="centerVH fade-in">
+				<a class="button" onclick="this.className = 'button fade-out'; tourManager.begin()">
+					<svg>
+						<g>
+							<line x2="227.62" y1="31.28" y2="31.28"></line>
+							<polyline points="222.62 25.78 228.12 31.28 222.62 36.78"></polyline>
+							<circle cx="224.67" cy="30.94" r="30.5" transform="rotate(180 224.67 30.94) scale(1, -1) translate(0, -61)"></circle>
+						</g>
+					</svg>
+					<font>Begin Tour</font>
+				</a>
+			</div>
+
+			<div id="tour-markers" style="display: none;" class="wrapAlign">
+				<h1>Tour BHS Virtually</h1>
+				<div>
+					<div class="arrow right rightAlign" onclick="tourManager.clientAction('right')"></div>
+					<br>
+					<div class="arrow left leftAlign" onclick="tourManager.clientAction('left')"></div>
+				</div>
+			</div>
+
+			<div class="footer center fade-in">
+				<p>By Aaron Becker</p>
+			</div>
+		</div>
+
+
 		<style type="text/css">
 			body {
 				font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
@@ -57,13 +80,9 @@
 				font-weight: 10;
 			}
 
-			#panoContainer {
-				width: 1000px;
-				height: 1000px;
-			}
-			#panoContainer div {
-				width: 1000px;
-				height: 1000px;
+			.pano {
+				width: 600px;
+				height: 400px;
 			}
 
 			div.arrow {
@@ -247,8 +266,9 @@
 			const tourManager = {
 				panoData: [],
 				createdPanoObjects: [],
-				defaultElement: "panoContainer",
+				defaultElement: "mainContainer",
 				slideIndex: 0,
+				lastIndex: 2,
 				begin: function() {
 					console.log("TOUR BEGUN");
 					const tm = document.getElementById("tour-markers");
@@ -271,6 +291,7 @@
 				loadPanos: function(panoData) {
 					let length = JSON.parse(JSON.stringify(panoData.length));
 					length = 2;
+					tourManager.lastIndex = length;
 					for (var i=0; i<length; i++) {
 						console.log("Loading panoData at index: "+i);
 						let pano = panoData[i];
@@ -291,6 +312,7 @@
 
 					let panoContainerElement = document.createElement("div");
 					panoContainerElement.style.display = "none";
+					panoContainerElement.setAttribute("class","pano")
 					panoContainerElement.setAttribute("id",id); //create container
 	
 					let panoTextElement = document.createElement("p");
@@ -302,10 +324,11 @@
 					realPanoElement.setAttribute("id","PANO-"+id);
 					panoContainerElement.appendChild(realPanoElement); //create actual pano element
 	
-					documentContainer.appendChild(panoContainerElement); //add container to doc container lol
+					documentContainer.prepend(panoContainerElement); //add container to doc container lol
 	
 					let pano = pannellum.viewer("PANO-"+id, ﻿{ //create panoObject
             		    "panorama": url,
+            		    "type": "equirectangular",
             		    //"autoLoad": true,
             		    "showControls": false,
             		});
@@ -352,13 +375,21 @@
 					let documentContainer = document.getElementById(tourManager.defaultElement);
 					let children = documentContainer.children;
 
-					if (tourManager.slideIndex > children.length) {
+					if (tourManager.slideIndex >= children.length) {
 						tourManager.slideIndex = 0;
 					} else if (tourManager.slideIndex < 0) {
 						tourManager.slideIndex = children.length;
 					}
+					index = tourManager.slideIndex; //apply wrapping to index
+
+					console.log('slide lookup')
 					for (var i=0; i<children.length; i++) {
-						if (i == index) {
+						console.log(i,index)
+						if (i >= tourManager.lastIndex) {
+							break;
+						}
+						if (Number(i) == Number(index)) {
+							console.log(children[i])
 							children[i].style.display = "block";
 						} else {
 							children[i].style.display = "none";
@@ -376,36 +407,5 @@
 			tourManager.init();
 			tourManager.setIndex(0);
 		</script>
-		<div class="center">
-			<div style="display: block" class="centerVH fade-in">
-				<a class="button" onclick="this.className = 'button fade-out'; tourManager.begin()">
-					<svg>
-						<g>
-							<line x2="227.62" y1="31.28" y2="31.28"></line>
-							<polyline points="222.62 25.78 228.12 31.28 222.62 36.78"></polyline>
-							<circle cx="224.67" cy="30.94" r="30.5" transform="rotate(180 224.67 30.94) scale(1, -1) translate(0, -61)"></circle>
-						</g>
-					</svg>
-					<font>Begin Tour</font>
-				</a>
-			</div>
-
-			<div id="tour-markers" style="display: none;" class="wrapAlign">
-				<h1>Tour BHS Virtually</h1>
-				<div>
-					<div class="arrow right rightAlign" onclick="tourManager.clientAction('right')"></div>
-					<br>
-					<div class="arrow left leftAlign" onclick="tourManager.clientAction('left')"></div>
-				</div>
-			</div>
-			
-			<div id="panoContainer">
-				TEST
-			</div>
-
-			<div class="footer center fade-in">
-				<p>By Aaron Becker</p>
-			</div>
-		</div>
 	</body>
 </html>

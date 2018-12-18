@@ -53,6 +53,16 @@ app.get('/', (req, res) => {
 		}
 	});
 });
+app.get('/test', (req, res) => {
+	console.log("cli request");
+	fs.readFile(configData.testFile, (error, buffer) => {
+		if (error) {
+			res.end("Couldn't find file: "+configData.frontendFile);
+		} else {
+			res.end(buffer);
+		}
+	});
+});
 app.get('/panoramaData', (req, res) => {
 	console.log("cli request: pano");
 	res.end(JSON.stringify(panoMetadata));
