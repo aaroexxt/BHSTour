@@ -292,27 +292,27 @@
 					let panoContainerElement = document.createElement("div");
 					panoContainerElement.style.display = "none";
 					panoContainerElement.setAttribute("id",id); //create container
-
+	
 					let panoTextElement = document.createElement("p");
 					panoTextElement.appendChild(document.createTextNode(metadata));
 					panoTextElement.setAttribute("id","META-"+id);
 					panoContainerElement.appendChild(panoTextElement); //append metadata holder
-
+	
 					let realPanoElement = document.createElement("div");
 					realPanoElement.setAttribute("id","PANO-"+id);
 					panoContainerElement.appendChild(realPanoElement); //create actual pano element
-
+	
 					documentContainer.appendChild(panoContainerElement); //add container to doc container lol
-
+	
 					let pano = pannellum.viewer("PANO-"+id, ﻿{ //create panoObject
-	                    //"panorama": url,
-	                    //"autoLoad": true,
-	                    "showControls": false,
-	                });
-	                //pano.loadScene();
-	                tourManager.createdPanoObjects.push(pano);
-
-	                console.log("pano cre8ed")
+            		    "panorama": url,
+            		    //"autoLoad": true,
+            		    "showControls": false,
+            		});
+            		//pano.loadScene();
+            		tourManager.createdPanoObjects.push(pano);
+	
+            		console.log("pano cre8ed")
 				
 
 					/*let pano = pannellum.viewer('workshop360', ﻿{
