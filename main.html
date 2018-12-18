@@ -290,7 +290,7 @@
 				},
 				loadPanos: function(panoData) {
 					let length = JSON.parse(JSON.stringify(panoData.length));
-					length = 2;
+					//length = 2;
 					tourManager.lastIndex = length;
 					for (var i=0; i<length; i++) {
 						console.log("Loading panoData at index: "+i);
@@ -329,10 +329,11 @@
 					let pano = pannellum.viewer("PANO-"+id, ﻿{ //create panoObject
             		    "panorama": url,
             		    "type": "equirectangular",
-            		    //"autoLoad": true,
+            		    "autoLoad": true,
+            		    "autoRotate": -2,
             		    "showControls": false,
             		});
-            		//pano.loadScene();
+            		pano.loadScene();
             		tourManager.createdPanoObjects.push(pano);
 	
             		console.log("pano cre8ed")
