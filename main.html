@@ -24,6 +24,8 @@
 
 			<div id="tour-markers" style="display: none;" class="wrapAlign">
 				<h1>Tour BHS Virtually</h1>
+				<div id="panoContainer">
+				</div>
 				<div>
 					<div class="arrow right rightAlign" onclick="tourManager.clientAction('right')"></div>
 					<br>
@@ -252,6 +254,16 @@
 				float:left;
 				left: 20px !important;
 			}
+			#panoContainer .pano {
+				width: 1200px;
+				height: 800px;
+			}
+			#panoContainer {
+				position: absolute;
+				left: -moz-calc(50% - 600px);
+			    left: -webkit-calc(50% - 600px);
+			    left: calc(50% - 600px);
+			}
 
 		</style>
 		<script>
@@ -266,7 +278,7 @@
 			const tourManager = {
 				panoData: [],
 				createdPanoObjects: [],
-				defaultElement: "mainContainer",
+				defaultElement: "panoContainer",
 				slideIndex: 0,
 				lastIndex: 2,
 				begin: function() {
@@ -333,7 +345,7 @@
             		    "autoRotate": -2,
             		    "showControls": false,
             		});
-            		pano.loadScene();
+            		pano.loadScene(0);
             		tourManager.createdPanoObjects.push(pano);
 	
             		console.log("pano cre8ed")
